@@ -1,0 +1,8 @@
+.wheel {
+    height: 400px;
+    width: 400px;
+    border-radius: 50%;
+    background-image: conic-gradient(red 0% 10%, orange 10% 20%, yellow 20% 30%, aqua 30% 40%, green 40% 50%, white 50% 60%,  pink 60% 70%, blue 70% 80%, indigo 80% 90%, violet 90% 100%);
+    top: 30%;
+    left: 10%;
+};
