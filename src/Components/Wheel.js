@@ -1,48 +1,50 @@
-import React, { Component } from 'react';
-import WheelCards from "./WheelCards";
+import React, { Component } from "react";
+import "./styles.css";
+// import WheelCards from "./WheelCards.js";
 
 export class Wheel extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            radius: 0,
-            cards: [],
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      theta: 0.0,
+    };
+    this.temp_theta = 0.0;
+    this.anim_id = null;
+  }
 
-    componentDidMount() {
-        let wheelCenter = {
-            x: parseFloat(this.wheel.style.width) / 2.0,
-            y: parseFloat(this.wheel.style.height) / 2.0,
 
-        }
-        let newCard = [
-            <WheelCards theta={0.0} radius={this.state.radius} center={wheelCenter} />
 
-        ]
+  handleScroll = (event) => {
+    clearTimeout(this.anim_id);
+    this.temp_theta += event.deltaY;
+    this.wheel.style.transform = ` rotate(${this.temp_theta * 7}deg)`;
+    setTimeout(() => {
+      this.setState({ theta: this.temp_theta });
+    }, 1000);
+  };
 
-        this.setState({cards: newCard});
-        }
-    
-    render() {
-        return (
-            <div ref={ref_id => this.wheel = ref_id} style={styles.wheel}>
-                {this.state.cards}
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div
+        onWheel={this.handleScroll}
+        ref={(ref_id) => (this.wheel = ref_id)}
+       className="wheel"
+      >
+      </div>
+    );
+  }
 }
 
-const styles = {
-    wheel: {
-        position: "absolute",
-        top: '50%',
-        left: "50%",   
-        transform: "translate (-50%, -50%)",
-        height: "500px",
-        width: "500px",
-        backgroundColor: "blue",
-    }
-}
+// const styles = {
+//   wheel: {
+//     height: "400px",
+//     width: "400px",
+//     borderRadius: "50%",
+//     backgroundImage: `conic-gradient(red 0% 10%, orange 10% 20%, yellow 20% 30%, aqua 30% 40%, green 40% 50%, white 50% 60%,  pink 60% 70%, blue 70% 80%, indigo 80% 90%, violet 90% 100%)`,
+//     top:"30%",
+//     left: "10%",
+// },
+
+// };
 
 export default Wheel;
