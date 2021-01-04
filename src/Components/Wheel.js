@@ -1,24 +1,65 @@
 import React, { Component } from "react";
 import "./styles.css";
-// import WheelCards from "./WheelCards.js";
 
+function getCoords(theta, radius) {
+  return {
+    x: Math.cos(theta) * radius,
+    y: Math.sin(theta) * radius,
+  }
+}
+
+function Card(props) {
+  let coords = getCoords(props.theta, props.radius)
+  return (
+    <div className="Card"  style={{ left:`${props.center.x}px`, top: `${props.center.y - coords.y}px`}}>
+
+
+    </div>
+
+  )
+}
 export class Wheel extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      radius: 250,
+      cards: [],
       theta: 0.0,
     };
     this.temp_theta = 0.0;
     this.anim_id = null;
   }
 
+  componentDidMount(){
+    let centerWheel ={
+      x: parseFloat(this.wheel.style.width) / 2,
+      y: parseFloat(this.wheel.style.height) / 2,
 
+    }
+    let temp_cards = [];
 
-  handleScroll = (event) => {
+    for (let i = 0; i < 8; i++ ) {
+      temp_cards.push(
+        <Card radius = {this.state.radius} theta={(Math.PI / 4) * i} center={centerWheel} key={`card_id`}/>
+      );
+    }
+    this.setState({cards: temp_cards});
+  }
+
+  handleSpin = (event) => {
+   
     clearTimeout(this.anim_id);
-    this.temp_theta += event.deltaY;
-    this.wheel.style.transform = ` rotate(${this.temp_theta * 7}deg)`;
-    setTimeout(() => {
+  let wheelCirm = 360;
+    let spin_speed = (wheelCirm / 8) * 20;
+         console.log(this.wheel.style.width); 
+    this.temp_theta += spin_speed
+        this.wheel.style.transitionDuration = '4.0s';
+        this.wheel.style.transitionDelay = '0.0s';
+        this.wheel.style.transform = `rotate(${this.temp_theta}deg)`;
+
+        // need to add maintain words orientation
+
+   this.anim_id = setTimeout(() => {
       this.setState({ theta: this.temp_theta });
     }, 1000);
   };
@@ -26,25 +67,13 @@ export class Wheel extends Component {
   render() {
     return (
       <div
-        onWheel={this.handleScroll}
+        onWheel={this.handleSpin}
         ref={(ref_id) => (this.wheel = ref_id)}
-       className="wheel"
-      >
-      </div>
+        className="wheel"
+        style={{ position: "fixed" }}
+      ></div>
     );
   }
 }
-
-// const styles = {
-//   wheel: {
-//     height: "400px",
-//     width: "400px",
-//     borderRadius: "50%",
-//     backgroundImage: `conic-gradient(red 0% 10%, orange 10% 20%, yellow 20% 30%, aqua 30% 40%, green 40% 50%, white 50% 60%,  pink 60% 70%, blue 70% 80%, indigo 80% 90%, violet 90% 100%)`,
-//     top:"30%",
-//     left: "10%",
-// },
-
-// };
 
 export default Wheel;
